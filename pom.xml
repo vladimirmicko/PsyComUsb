@@ -3,11 +3,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.vladimir</groupId>
-  <artifactId>MyUsb4Java</artifactId>
+  <artifactId>PsyComUsb</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>MyUsb4Java</name>
+  <name>PsyComUsb</name>
   <url>http://maven.apache.org</url>
 
   <properties>

@@ -1,4 +1,4 @@
-package com.vladimir.MyUsb4Java;
+package com.vladimir.PsyComUsb;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
