@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.usb.UsbConfiguration;
 import javax.usb.UsbConst;
+import javax.usb.UsbControlIrp;
 import javax.usb.UsbDevice;
 import javax.usb.UsbDeviceDescriptor;
 import javax.usb.UsbEndpoint;
@@ -16,14 +17,16 @@ import javax.usb.UsbServices;
 
 public class App {
 	
-	/** The vendor ID of the PsyCom */
-	//private static final short VENDOR_ID = 0x2786;
-	private static final short VENDOR_ID = 0x5986;
+	/** The vendor ID of the ArtMedico */
+	private static final short VENDOR_ID = 0x2786;
+	//private static final short VENDOR_ID = 0x5986;
 
 	/** The product ID of the PsyCom */
 	//private static final short PRODUCT_ID = 0x7750;
-	private static final short PRODUCT_ID = 0x2113;
-
+	//private static final short PRODUCT_ID = 0x2113;
+	/** The product ID of the BioScope BS20 */
+	private static final short PRODUCT_ID = 0x2720;
+	
 	public static void main(String[] args) {
 		App app = new App();
 		try {
@@ -86,6 +89,16 @@ public class App {
 		});
 
 		
+	}
+	
+	private static void sendMessage(UsbDevice device, byte[] message) throws UsbException {
+
+		UsbControlIrp irp = device.createUsbControlIrp((byte) 0x21, (byte) 0x09, (short) 0x0200, (short) 0x0000);
+		irp.setData(message);
+
+		device.syncSubmit(irp);
+		irp.waitUntilComplete(100);
+
 	}
 	
 	
