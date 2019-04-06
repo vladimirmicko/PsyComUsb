@@ -15,21 +15,19 @@ import javax.usb.UsbInterface;
 import javax.usb.UsbInterfacePolicy;
 import javax.usb.UsbServices;
 
-public class App {
+public class App2 {
 	
 	/** The vendor ID of the ArtMedico */
 	private static final short VENDOR_ID = 0x2786;
-	//private static final short VENDOR_ID = 0x5986;
-
-	/** The product ID of the PsyCom */
-	//private static final short PRODUCT_ID = 0x7750;
-	//private static final short PRODUCT_ID = 0x2113;
 	/** The product ID of the BioScope BS20 */
 	private static final short PRODUCT_ID = 0x2720;
+	
 	private UsbDevice device;
 	
+	
+	
 	public static void main(String[] args) {
-		App app = new App();
+		App2 app = new App2();
 		try {
 			app.initialize();
 		} catch (SecurityException e) {
@@ -37,7 +35,6 @@ public class App {
 		} catch (UsbException e) {
 			e.printStackTrace();
 		}
-
 	}
 	
 	
@@ -54,21 +51,24 @@ public class App {
 		}
 
 		System.out.println("USB device found!");
-		claimInterface(device);
+		
+		UsbConfiguration configuration = device.getUsbConfiguration((byte) 1);
+		UsbInterface iface = configuration.getUsbInterface((byte) 0);
+		iface.claim(new UsbInterfacePolicy() {
+			public boolean forceClaim(UsbInterface usbInterface) {
+				return true;
+			}
+		});
+		
+		
 		
 		byte[] message = {115};
-		sendMessage(device ,message);
+		UsbControlIrp irp = device.createUsbControlIrp((byte) 0x21, (byte) 0x09, (short) 0x0200, (short) 0x0000);
+		irp.setData(message);
+
+		device.syncSubmit(irp);
+		irp.waitUntilComplete(100);
 		
-		
-//		for (Object i : device.getActiveUsbConfiguration().getUsbInterfaces()) {
-//			UsbInterface intf = (UsbInterface) i;
-//			for (Object e : intf.getUsbEndpoints()) {
-//				UsbEndpoint endp = (UsbEndpoint) e;
-//				if (endp.getDirection() == UsbConst.ENDPOINT_DIRECTION_IN) {
-//					//this.pipe = endp.getUsbPipe();
-//				}
-//			}
-//		}
 	}
 	
 	public UsbDevice findDevice(UsbHub hub, short vendorId, short productId)
@@ -86,31 +86,7 @@ public class App {
 	    return null;
 	}
 	
-	
-	public void claimInterface(UsbDevice device) throws UsbException {
 
-		UsbConfiguration configuration = device.getUsbConfiguration((byte) 1);
-		UsbInterface iface = configuration.getUsbInterface((byte) 0);
-		iface.claim(new UsbInterfacePolicy() {
-			public boolean forceClaim(UsbInterface usbInterface) {
-				return true;
-			}
-		});
-
-		
-	}
-	
-	private static void sendMessage(UsbDevice device, byte[] message) throws UsbException {
-
-		UsbControlIrp irp = device.createUsbControlIrp((byte) 0x21, (byte) 0x09, (short) 0x0200, (short) 0x0000);
-		irp.setData(message);
-
-		device.syncSubmit(irp);
-		irp.waitUntilComplete(100);
-
-	}
-
-	
 	
 
 }
