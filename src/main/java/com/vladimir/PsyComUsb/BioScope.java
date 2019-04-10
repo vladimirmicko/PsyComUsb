@@ -21,7 +21,6 @@ import javax.usb.UsbNotClaimedException;
 import javax.usb.UsbNotOpenException;
 import javax.usb.UsbPipe;
 import javax.usb.UsbServices;
-import javax.usb.util.DefaultUsbIrp;
 
 public class BioScope {
 
@@ -211,7 +210,6 @@ public class BioScope {
 				e.printStackTrace();
 			}
 		}
-
 	}
 
 	public UsbDevice findDevice(UsbHub hub, short vendorId, short productId) {
